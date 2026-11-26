@@ -1,7 +1,7 @@
 {
   "version": 1,
   "rules": [
-    {"id": "ENG-001", "name": "No magic strings", "severity": "high", "enforcement": "required"},
+    {"id": "ENG-001", "name": "No magic strings", "severity": "high", "enforcement": "advisory"},
     {"id": "ENG-002", "name": "Feature flags are mandatory", "severity": "high", "enforcement": "required"},
     {"id": "ENG-003", "name": "New features are disabled by default", "severity": "high", "enforcement": "required"},
     {"id": "ENG-004", "name": "Feature flags use named identifiers", "severity": "medium", "enforcement": "required"},

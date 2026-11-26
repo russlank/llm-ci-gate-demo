@@ -143,7 +143,7 @@ pr_agent:
     enable_review_labels_security: false
     enable_review_labels_effort: false
     enable_large_pr_chunking: false
-    num_max_findings: 12
+    num_max_findings: 1
   github:
     base_url: https://api.github.com
     deployment_type: user

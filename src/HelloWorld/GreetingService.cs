@@ -46,7 +46,7 @@ public sealed class GreetingService(IFeatureManager features, GreetingOptions op
         {
             GreetingMessages.SpanishCode => (GreetingMessages.Spanish, GreetingMessages.PersonalizedSpanish),
             GreetingMessages.SwedishCode => (GreetingMessages.Swedish, GreetingMessages.PersonalizedSwedish),
-            _ => (GreetingMessages.Default, GreetingMessages.Personalized)
+            _ => ("Hello, World!", GreetingMessages.Personalized)
         };
 
         return string.IsNullOrEmpty(name)
