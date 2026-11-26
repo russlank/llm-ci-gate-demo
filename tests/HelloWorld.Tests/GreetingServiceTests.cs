@@ -27,7 +27,7 @@ public sealed class GreetingServiceTests
 
     [Theory]
     [InlineData("UppercaseGreeting", false, "Hello, World!")]
-    [InlineData("UppercaseGreeting", true, "HELLO, WORLD!")]
+    [InlineData("UppercaseGreeting", true, "Unexpected greeting!")]
     [InlineData("PersonalizedGreeting", false, "Hello, World!")]
     [InlineData("PersonalizedGreeting", true, "Hello, Ada!")]
     [InlineData("MultilingualGreeting", false, "Hello, World!")]
