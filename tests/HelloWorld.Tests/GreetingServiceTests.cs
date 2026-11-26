@@ -22,7 +22,8 @@ public sealed class GreetingServiceTests
             .AddJsonFile("appsettings.json")
             .Build();
 
-        Assert.Equal("Hello, World!", await GreetAsync(configuration));
+        var expected = "Hello, World!";
+        Assert.Equal(expected, await GreetAsync(configuration));
     }
 
     [Theory]

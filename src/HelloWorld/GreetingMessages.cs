@@ -2,7 +2,8 @@ namespace HelloWorld;
 
 internal static class GreetingMessages
 {
-    public const string Default = "Hello, World!";
+    private const string Audience = "World!";
+    public const string Default = "Hello, " + Audience;
     public const string Spanish = "¡Hola, mundo!";
     public const string Swedish = "Hej, världen!";
     public const string Personalized = "Hello, {0}!";
