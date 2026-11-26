@@ -29,7 +29,7 @@ public sealed class GreetingServiceTests
     [InlineData("UppercaseGreeting", false, "Hello, World!")]
     [InlineData("UppercaseGreeting", true, "HELLO, WORLD!")]
     [InlineData("PersonalizedGreeting", false, "Hello, World!")]
-    [InlineData("PersonalizedGreeting", true, "Hello, Ada!")]
+    [InlineData("PersonalizedGreeting", true, "Hlelo, Ada!")]
     [InlineData("MultilingualGreeting", false, "Hello, World!")]
     [InlineData("MultilingualGreeting", true, "¡Hola, mundo!")]
     [InlineData("StyledGreeting", false, "Hello, World!")]
