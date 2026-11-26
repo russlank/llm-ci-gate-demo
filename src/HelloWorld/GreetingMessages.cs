@@ -10,6 +10,7 @@ internal static class GreetingMessages
     public const string PersonalizedSwedish = "Hej, {0}!";
     public const string Formal = "[ {0} ]";
     public const string Timestamped = "[{0:O}] {1}";
+    public const string Signed = "{0} — {1}";
     public const string SpanishCode = "es";
     public const string SwedishCode = "sv";
 }
