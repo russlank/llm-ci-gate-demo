@@ -7,4 +7,5 @@ internal static class FeatureFlags
     public const string TimestampedGreeting = nameof(TimestampedGreeting);
     public const string MultilingualGreeting = nameof(MultilingualGreeting);
     public const string StyledGreeting = nameof(StyledGreeting);
+    public const string SignedGreeting = nameof(SignedGreeting);
 }
