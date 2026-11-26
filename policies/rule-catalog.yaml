@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "rules": [
+    {"id": "ENG-001", "name": "No magic strings", "severity": "high", "enforcement": "required"},
+    {"id": "ENG-002", "name": "Feature flags are mandatory", "severity": "high", "enforcement": "required"},
+    {"id": "ENG-003", "name": "New features are disabled by default", "severity": "high", "enforcement": "required"},
+    {"id": "ENG-004", "name": "Feature flags use named identifiers", "severity": "medium", "enforcement": "required"},
+    {"id": "ENG-005", "name": "New features require tests", "severity": "high", "enforcement": "required"},
+    {"id": "ENG-006", "name": "No silent exception swallowing", "severity": "high", "enforcement": "required"},
+    {"id": "ENG-007", "name": "Separation of concerns", "severity": "medium", "enforcement": "advisory"},
+    {"id": "ENG-008", "name": "Preserve backward compatibility", "severity": "high", "enforcement": "required"},
+    {"id": "ENG-009", "name": "Spell printed text correctly", "severity": "medium", "enforcement": "required"}
+  ]
+}

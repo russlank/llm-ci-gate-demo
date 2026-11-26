@@ -1,0 +1,13 @@
+diff --git a/src/HelloWorld/GreetingService.cs b/src/HelloWorld/GreetingService.cs
+index f6d64d1..1f819b3 100644
+--- a/src/HelloWorld/GreetingService.cs
++++ b/src/HelloWorld/GreetingService.cs
+@@ -32,7 +32,7 @@ public sealed class GreetingService(IFeatureManager features, GreetingOptions op
+             greeting = greeting.ToUpperInvariant();
+         }
+ 
+-        if (await features.IsEnabledAsync(FeatureFlags.TimestampedGreeting))
++        if (await features.IsEnabledAsync("TimestampedGreeting"))
+         {
+             greeting = string.Format(CultureInfo.InvariantCulture, GreetingMessages.Timestamped, clock.GetUtcNow(), greeting);
+         }

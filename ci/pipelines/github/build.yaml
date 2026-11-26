@@ -1,0 +1,32 @@
+# Canonical source in ci/pipelines/github/. Edit it here, then run
+# ./ci/select-pipeline.sh select github to install it.
+# Conventional gate. GitHub Actions equivalent of ci/pipelines/woodpecker/build.yaml.
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dotnet-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Same SDK image as the Woodpecker step, so both forges build identically.
+    container: mcr.microsoft.com/dotnet/sdk:10.0
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Verify the pipeline selection
+        run: ./ci/select-pipeline.sh check
+      - name: Restore, build, test and verify formatting
+        run: ./ci/dotnet-gates.sh

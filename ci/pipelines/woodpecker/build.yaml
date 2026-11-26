@@ -1,0 +1,13 @@
+# Canonical source in ci/pipelines/woodpecker/. Edit it here, then run
+# ./ci/select-pipeline.sh select woodpecker to install it.
+# Conventional gate.
+when:
+  - event: [push, pull_request]
+    branch: main
+
+steps:
+  - name: dotnet-gates
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+    commands:
+      - ./ci/select-pipeline.sh check
+      - ./ci/dotnet-gates.sh

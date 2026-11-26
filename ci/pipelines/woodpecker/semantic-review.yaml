@@ -1,0 +1,51 @@
+# Canonical source in ci/pipelines/woodpecker/. Edit it here, then run
+# ./ci/select-pipeline.sh select woodpecker to install it.
+# Semantic gate.
+when:
+  - event: pull_request
+    branch: main
+    evaluate: 'CI_FORGE_TYPE in ["gitea", "github"]'
+
+skip_clone: true
+
+steps:
+  - name: semantic-review
+    image: registry.digixoil.se/llm-ci-gate-plugin:0.4.5
+    when:
+      - evaluate: 'CI_FORGE_TYPE == "github"'
+    settings:
+      github_token:
+        from_secret: github_review_token
+      log_review_output: "true"
+      # Gemini. Enable one provider block at a time.
+      llm_provider: gemini
+      gemini_key:
+        from_secret: gemini_api_key
+      # OpenAI alternative:
+      # llm_provider: openai
+      # openai_key:
+      #   from_secret: openai_api_key
+      # Claude alternative:
+      # llm_provider: claude
+      # claude_key:
+      #   from_secret: claude_api_key
+  - name: semantic-review-gitea
+    image: registry.digixoil.se/llm-ci-gate-plugin:0.4.5
+    when:
+      - evaluate: 'CI_FORGE_TYPE == "gitea"'
+    settings:
+      gitea_token:
+        from_secret: gitea_review_token
+      log_review_output: "true"
+      # Gemini for Gitea testing. Enable one provider block at a time.
+      llm_provider: gemini
+      gemini_key:
+        from_secret: gemini_api_key
+      # OpenAI alternative:
+      # llm_provider: openai
+      # openai_key:
+      #   from_secret: openai_api_key
+      # Claude alternative:
+      # llm_provider: claude
+      # claude_key:
+      #   from_secret: claude_api_key

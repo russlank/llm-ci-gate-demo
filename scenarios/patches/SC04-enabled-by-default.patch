@@ -1,0 +1,116 @@
+diff --git a/src/HelloWorld/FeatureFlags.cs b/src/HelloWorld/FeatureFlags.cs
+index e434d7e..12c99e0 100644
+--- a/src/HelloWorld/FeatureFlags.cs
++++ b/src/HelloWorld/FeatureFlags.cs
+@@ -7,4 +7,5 @@ internal static class FeatureFlags
+     public const string TimestampedGreeting = nameof(TimestampedGreeting);
+     public const string MultilingualGreeting = nameof(MultilingualGreeting);
+     public const string StyledGreeting = nameof(StyledGreeting);
++    public const string SignedGreeting = nameof(SignedGreeting);
+ }
+diff --git a/src/HelloWorld/GreetingMessages.cs b/src/HelloWorld/GreetingMessages.cs
+index b8945c1..43b340a 100644
+--- a/src/HelloWorld/GreetingMessages.cs
++++ b/src/HelloWorld/GreetingMessages.cs
+@@ -10,6 +10,7 @@ internal static class GreetingMessages
+     public const string PersonalizedSwedish = "Hej, {0}!";
+     public const string Formal = "[ {0} ]";
+     public const string Timestamped = "[{0:O}] {1}";
++    public const string Signed = "{0} — {1}";
+     public const string SpanishCode = "es";
+     public const string SwedishCode = "sv";
+ }
+diff --git a/src/HelloWorld/GreetingOptions.cs b/src/HelloWorld/GreetingOptions.cs
+index 61667ef..ff2935d 100644
+--- a/src/HelloWorld/GreetingOptions.cs
++++ b/src/HelloWorld/GreetingOptions.cs
+@@ -17,4 +17,7 @@ public sealed class GreetingOptions
+ 
+     /// <summary>Style name used when styled greetings are enabled.</summary>
+     public string? Style { get; set; }
++
++    /// <summary>Signature appended when signed greetings are enabled.</summary>
++    public string? Signature { get; set; }
+ }
+diff --git a/src/HelloWorld/GreetingService.cs b/src/HelloWorld/GreetingService.cs
+index f6d64d1..a9e6b82 100644
+--- a/src/HelloWorld/GreetingService.cs
++++ b/src/HelloWorld/GreetingService.cs
+@@ -9,7 +9,7 @@ namespace HelloWorld;
+ /// <param name="clock">Clock used for the optional UTC timestamp.</param>
+ public sealed class GreetingService(IFeatureManager features, GreetingOptions options, TimeProvider clock)
+ {
+-    /// <summary>Builds the greeting, then applies style, uppercase, and timestamp in that order.</summary>
++    /// <summary>Builds the greeting, then applies style, uppercase, timestamp, and signature in that order.</summary>
+     /// <returns>The complete greeting. With every flag off, it returns the default message.</returns>
+     public async Task<string> GreetAsync()
+     {
+@@ -37,6 +37,12 @@ public sealed class GreetingService(IFeatureManager features, GreetingOptions op
+             greeting = string.Format(CultureInfo.InvariantCulture, GreetingMessages.Timestamped, clock.GetUtcNow(), greeting);
+         }
+ 
++        var signature = options.Signature?.Trim();
++        if (await features.IsEnabledAsync(FeatureFlags.SignedGreeting) && !string.IsNullOrEmpty(signature))
++        {
++            greeting = string.Format(CultureInfo.InvariantCulture, GreetingMessages.Signed, greeting, signature);
++        }
++
+         return greeting;
+     }
+ 
+diff --git a/src/HelloWorld/appsettings.json b/src/HelloWorld/appsettings.json
+index d9a524b..77d8f93 100644
+--- a/src/HelloWorld/appsettings.json
++++ b/src/HelloWorld/appsettings.json
+@@ -4,11 +4,13 @@
+     "PersonalizedGreeting": false,
+     "TimestampedGreeting": false,
+     "MultilingualGreeting": false,
+-    "StyledGreeting": false
++    "StyledGreeting": false,
++    "SignedGreeting": true
+   },
+   "Greeting": {
+     "Name": "",
+     "Language": "en",
+-    "Style": "Plain"
++    "Style": "Plain",
++    "Signature": ""
+   }
+ }
+diff --git a/tests/HelloWorld.Tests/GreetingServiceTests.cs b/tests/HelloWorld.Tests/GreetingServiceTests.cs
+index 504aef1..4d2e290 100644
+--- a/tests/HelloWorld.Tests/GreetingServiceTests.cs
++++ b/tests/HelloWorld.Tests/GreetingServiceTests.cs
+@@ -48,13 +48,29 @@ public sealed class GreetingServiceTests
+         Assert.Equal(expected, await GreetAsync(configuration));
+     }
+ 
+-    private static async Task<string> GreetAsync(IConfiguration configuration)
++    [Theory]
++    [InlineData(false, "Hello, World!")]
++    [InlineData(true, "Hello, World! — The HelloWorld team")]
++    public async Task GreetAsync_SignedFlag_ControlsOutput(bool enabled, string expected)
++    {
++        var configuration = new ConfigurationBuilder()
++            .AddInMemoryCollection(new Dictionary<string, string?>
++            {
++                ["FeatureManagement:SignedGreeting"] = enabled.ToString()
++            })
++            .Build();
++        var options = new GreetingOptions { Signature = "The HelloWorld team" };
++
++        Assert.Equal(expected, await GreetAsync(configuration, options));
++    }
++
++    private static async Task<string> GreetAsync(IConfiguration configuration, GreetingOptions? options = null)
+     {
+         var services = new ServiceCollection();
+         services.AddFeatureManagement(configuration);
+         using var provider = services.BuildServiceProvider();
+         var features = provider.GetRequiredService<IFeatureManager>();
+-        return await new GreetingService(features, Options, new FixedTimeProvider()).GreetAsync();
++        return await new GreetingService(features, options ?? Options, new FixedTimeProvider()).GreetAsync();
+     }
+ 
+     private sealed class FixedTimeProvider : TimeProvider

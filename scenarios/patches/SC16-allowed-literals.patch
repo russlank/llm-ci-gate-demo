@@ -1,0 +1,28 @@
+diff --git a/src/HelloWorld/GreetingMessages.cs b/src/HelloWorld/GreetingMessages.cs
+index b8945c1..81eb83b 100644
+--- a/src/HelloWorld/GreetingMessages.cs
++++ b/src/HelloWorld/GreetingMessages.cs
+@@ -2,7 +2,8 @@ namespace HelloWorld;
+ 
+ internal static class GreetingMessages
+ {
+-    public const string Default = "Hello, World!";
++    private const string Audience = "World!";
++    public const string Default = "Hello, " + Audience;
+     public const string Spanish = "¡Hola, mundo!";
+     public const string Swedish = "Hej, världen!";
+     public const string Personalized = "Hello, {0}!";
+diff --git a/tests/HelloWorld.Tests/GreetingServiceTests.cs b/tests/HelloWorld.Tests/GreetingServiceTests.cs
+index 504aef1..37eec2e 100644
+--- a/tests/HelloWorld.Tests/GreetingServiceTests.cs
++++ b/tests/HelloWorld.Tests/GreetingServiceTests.cs
+@@ -22,7 +22,8 @@ public sealed class GreetingServiceTests
+             .AddJsonFile("appsettings.json")
+             .Build();
+ 
+-        Assert.Equal("Hello, World!", await GreetAsync(configuration));
++        var expected = "Hello, World!";
++        Assert.Equal(expected, await GreetAsync(configuration));
+     }
+ 
+     [Theory]

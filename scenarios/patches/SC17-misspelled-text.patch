@@ -1,0 +1,26 @@
+diff --git a/src/HelloWorld/GreetingMessages.cs b/src/HelloWorld/GreetingMessages.cs
+index b8945c1..a3fc9a6 100644
+--- a/src/HelloWorld/GreetingMessages.cs
++++ b/src/HelloWorld/GreetingMessages.cs
+@@ -5,7 +5,7 @@ internal static class GreetingMessages
+     public const string Default = "Hello, World!";
+     public const string Spanish = "¡Hola, mundo!";
+     public const string Swedish = "Hej, världen!";
+-    public const string Personalized = "Hello, {0}!";
++    public const string Personalized = "Hlelo, {0}!";
+     public const string PersonalizedSpanish = "¡Hola, {0}!";
+     public const string PersonalizedSwedish = "Hej, {0}!";
+     public const string Formal = "[ {0} ]";
+diff --git a/tests/HelloWorld.Tests/GreetingServiceTests.cs b/tests/HelloWorld.Tests/GreetingServiceTests.cs
+index 504aef1..99c2b88 100644
+--- a/tests/HelloWorld.Tests/GreetingServiceTests.cs
++++ b/tests/HelloWorld.Tests/GreetingServiceTests.cs
+@@ -29,7 +29,7 @@ public sealed class GreetingServiceTests
+     [InlineData("UppercaseGreeting", false, "Hello, World!")]
+     [InlineData("UppercaseGreeting", true, "HELLO, WORLD!")]
+     [InlineData("PersonalizedGreeting", false, "Hello, World!")]
+-    [InlineData("PersonalizedGreeting", true, "Hello, Ada!")]
++    [InlineData("PersonalizedGreeting", true, "Hlelo, Ada!")]
+     [InlineData("MultilingualGreeting", false, "Hello, World!")]
+     [InlineData("MultilingualGreeting", true, "¡Hola, mundo!")]
+     [InlineData("StyledGreeting", false, "Hello, World!")]

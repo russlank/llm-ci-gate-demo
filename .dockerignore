@@ -1,0 +1,15 @@
+**
+!policies/
+!policies/engineering-rules.md
+!policies/rule-catalog.yaml
+!ci/
+!ci/gate/
+!ci/gate/evaluate.py
+!ci/gate/run.py
+!ci/gate/settings.py
+!ci/gate/settings.yaml
+!ci/pr-agent/
+!ci/pr-agent/review.py
+!ci/pr-agent/gitea_compare.py
+!ci/pr-agent/entrypoint.sh
+!ci/pr-agent/Dockerfile

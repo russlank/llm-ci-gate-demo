@@ -1,0 +1,78 @@
+# Canonical source in ci/pipelines/github/. Edit it here, then run
+# ./ci/select-pipeline.sh select github to install it.
+# Semantic gate. GitHub Actions equivalent of ci/pipelines/woodpecker/semantic-review.yaml.
+#
+# Like the Woodpecker step, this job does not check out the PR. The approved
+# reviewer image holds the gate code, settings and policy, so PR changes to
+# those files cannot alter the review of the same PR. The gate reads the PR
+# through the GitHub API and the pinned comparison, and its exit code is the
+# check result: 0 PASS/WARNING, 1 FAIL, 2 REVIEW_REQUIRED, 3 ERROR.
+#
+# Required repository secrets: GEMINI_API_KEY, REGISTRY_USERNAME, REGISTRY_PASSWORD.
+# Fork PRs receive no secrets and a read-only token, so they fail closed.
+name: semantic-review
+
+on:
+  pull_request:
+    branches: [main]
+
+# The job token reads the PR and posts the summary comment and inline review.
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+# A newer head supersedes an in-progress review of the same PR.
+concurrency:
+  group: semantic-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  REVIEWER_REGISTRY: registry.digixoil.se
+  REVIEWER_IMAGE: registry.digixoil.se/llm-ci-gate-plugin:0.4.5
+
+jobs:
+  semantic-review:
+    runs-on: ubuntu-latest
+    # The gate limits the reviewer process to 240 seconds.
+    timeout-minutes: 10
+    steps:
+      - name: Log in to the reviewer registry
+        env:
+          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+        run: |
+          printf '%s' "$REGISTRY_PASSWORD" |
+            docker login "$REVIEWER_REGISTRY" --username "$REGISTRY_USERNAME" --password-stdin
+
+      - name: Pull the approved reviewer image
+        run: docker pull "$REVIEWER_IMAGE"
+
+      - name: Review the pinned PR head
+        env:
+          PLUGIN_GITHUB_TOKEN: ${{ github.token }}
+          # Gemini. Enable one provider block at a time.
+          PLUGIN_LLM_PROVIDER: gemini
+          PLUGIN_GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # OpenAI alternative:
+          # PLUGIN_LLM_PROVIDER: openai
+          # PLUGIN_OPENAI_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # Claude alternative:
+          # PLUGIN_LLM_PROVIDER: claude
+          # PLUGIN_CLAUDE_KEY: ${{ secrets.CLAUDE_API_KEY }}
+          # Log the model response and structured review. Review text can quote the PR.
+          PLUGIN_LOG_REVIEW_OUTPUT: "true"
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_HEAD: ${{ github.event.pull_request.head.sha }}
+        # Pass credentials by name so their values never appear in the command line.
+        # --head makes the gate return REVIEW_REQUIRED if the PR moved since this event.
+        run: |
+          docker run --rm \
+            -e PLUGIN_GITHUB_TOKEN -e PLUGIN_LLM_PROVIDER \
+            -e PLUGIN_GEMINI_KEY -e PLUGIN_OPENAI_KEY -e PLUGIN_CLAUDE_KEY \
+            -e PLUGIN_LOG_REVIEW_OUTPUT \
+            "$REVIEWER_IMAGE" --pr-url "$PR_URL" --head "$PR_HEAD"
+
+      - name: Log out of the reviewer registry
+        if: always()
+        run: docker logout "$REVIEWER_REGISTRY"

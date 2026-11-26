@@ -1,0 +1,18 @@
+**/bin/
+**/obj/
+TestResults/
+
+# Visual Studio local workspace and user settings
+.vs/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+__pycache__/
+.venv/
+.env
+.env.*
+!.env.example
+out/

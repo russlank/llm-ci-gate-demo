@@ -1,0 +1,63 @@
+diff --git a/src/HelloWorld/GreetingService.cs b/src/HelloWorld/GreetingService.cs
+index f6d64d1..a55fa71 100644
+--- a/src/HelloWorld/GreetingService.cs
++++ b/src/HelloWorld/GreetingService.cs
+@@ -19,7 +19,7 @@ public sealed class GreetingService(IFeatureManager features, GreetingOptions op
+         var name = await features.IsEnabledAsync(FeatureFlags.PersonalizedGreeting)
+             ? options.Name?.Trim()
+             : null;
+-        var greeting = BuildGreeting(language, name);
++        var greeting = Program.BuildGreeting(language, name);
+ 
+         if (await features.IsEnabledAsync(FeatureFlags.StyledGreeting)
+             && string.Equals(options.Style?.Trim(), GreetingOptions.FormalStyle, StringComparison.OrdinalIgnoreCase))
+@@ -39,18 +39,4 @@ public sealed class GreetingService(IFeatureManager features, GreetingOptions op
+ 
+         return greeting;
+     }
+-
+-    private static string BuildGreeting(string? language, string? name)
+-    {
+-        var (standard, personalized) = language switch
+-        {
+-            GreetingMessages.SpanishCode => (GreetingMessages.Spanish, GreetingMessages.PersonalizedSpanish),
+-            GreetingMessages.SwedishCode => (GreetingMessages.Swedish, GreetingMessages.PersonalizedSwedish),
+-            _ => (GreetingMessages.Default, GreetingMessages.Personalized)
+-        };
+-
+-        return string.IsNullOrEmpty(name)
+-            ? standard
+-            : string.Format(CultureInfo.InvariantCulture, personalized, name);
+-    }
+ }
+diff --git a/src/HelloWorld/Program.cs b/src/HelloWorld/Program.cs
+index 6bcf2f1..c58be6b 100644
+--- a/src/HelloWorld/Program.cs
++++ b/src/HelloWorld/Program.cs
+@@ -1,3 +1,4 @@
++using System.Globalization;
+ using HelloWorld;
+ using Microsoft.Extensions.Configuration;
+ using Microsoft.Extensions.DependencyInjection;
+@@ -19,3 +20,21 @@ services.AddSingleton<GreetingService>();
+ using var provider = services.BuildServiceProvider();
+ 
+ Console.WriteLine(await provider.GetRequiredService<GreetingService>().GreetAsync());
++
++/// <summary>Greeting text selection kept beside the composition root.</summary>
++public partial class Program
++{
++    internal static string BuildGreeting(string? language, string? name)
++    {
++        var (standard, personalized) = language switch
++        {
++            GreetingMessages.SpanishCode => (GreetingMessages.Spanish, GreetingMessages.PersonalizedSpanish),
++            GreetingMessages.SwedishCode => (GreetingMessages.Swedish, GreetingMessages.PersonalizedSwedish),
++            _ => (GreetingMessages.Default, GreetingMessages.Personalized)
++        };
++
++        return string.IsNullOrEmpty(name)
++            ? standard
++            : string.Format(CultureInfo.InvariantCulture, personalized, name);
++    }
++}

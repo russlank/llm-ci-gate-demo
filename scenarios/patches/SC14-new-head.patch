@@ -1,0 +1,13 @@
+diff --git a/src/HelloWorld/GreetingService.cs b/src/HelloWorld/GreetingService.cs
+index a9e6b82..d953248 100644
+--- a/src/HelloWorld/GreetingService.cs
++++ b/src/HelloWorld/GreetingService.cs
+@@ -52,7 +52,7 @@ public sealed class GreetingService(IFeatureManager features, GreetingOptions op
+         {
+             GreetingMessages.SpanishCode => (GreetingMessages.Spanish, GreetingMessages.PersonalizedSpanish),
+             GreetingMessages.SwedishCode => (GreetingMessages.Swedish, GreetingMessages.PersonalizedSwedish),
+-            _ => (GreetingMessages.Default, GreetingMessages.Personalized)
++            _ => ("Hello, World!", GreetingMessages.Personalized)
+         };
+ 
+         return string.IsNullOrEmpty(name)

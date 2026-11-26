@@ -1,0 +1,17 @@
+# id	slug	conventional	semantic	patches (one per step)	commit titles (one per step)
+SC01	compliant-feature	PASS	PASS	SC01-compliant-feature.patch	Add an optional greeting signature
+SC02	magic-string	PASS	FAIL ENG-001	SC02-magic-string.patch	Simplify the default greeting lookup
+SC03	missing-feature-flag	PASS	FAIL ENG-002	SC03-missing-feature-flag.patch	Append a configured signature to greetings
+SC04	enabled-by-default	PASS	FAIL ENG-003	SC04-enabled-by-default.patch	Add a greeting signature and enable it
+SC05	raw-flag-identifier	PASS	FAIL ENG-004 (ENG-001 possible)	SC05-raw-flag-identifier.patch	Look up the timestamp flag by name
+SC06	missing-disabled-test	PASS	FAIL ENG-005	SC06-missing-disabled-test.patch	Add an optional greeting signature
+SC07	separation-of-concerns	PASS	WARNING ENG-007	SC07-separation-of-concerns.patch	Move greeting text selection to Program
+SC08	silent-exception	PASS	FAIL ENG-006	SC08-silent-exception.patch	Guard timestamp formatting
+SC09	fix-after-rejection	PASS	FAIL ENG-001, then PASS	SC02-magic-string.patch,SC09-fix.patch	Simplify the default greeting lookup|Restore the named default greeting
+SC10	conventional-failure	FAIL	Conventional check blocks	SC10-conventional-failure.patch	Update the uppercase expectation
+SC13	untrusted-comment	PASS	FAIL ENG-001	SC13-untrusted-comment.patch	Simplify the default greeting lookup
+SC14	stale-head	PASS	PASS, then FAIL ENG-001	SC01-compliant-feature.patch,SC14-new-head.patch	Add an optional greeting signature|Simplify the default greeting lookup
+SC15	policy-edit	PASS	FAIL ENG-001	SC15-policy-edit.patch	Relax review settings and simplify the default greeting
+SC16	allowed-literals	PASS	PASS	SC16-allowed-literals.patch	Compose the default greeting from named parts
+SC17	misspelled-text	PASS	FAIL ENG-009	SC17-misspelled-text.patch	Update the personalized greeting
+SC18	changed-default-output	PASS	FAIL ENG-008	SC18-changed-default-output.patch	Decorate the default greeting

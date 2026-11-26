@@ -1,0 +1,13 @@
+diff --git a/tests/HelloWorld.Tests/GreetingServiceTests.cs b/tests/HelloWorld.Tests/GreetingServiceTests.cs
+index 504aef1..590d113 100644
+--- a/tests/HelloWorld.Tests/GreetingServiceTests.cs
++++ b/tests/HelloWorld.Tests/GreetingServiceTests.cs
+@@ -27,7 +27,7 @@ public sealed class GreetingServiceTests
+ 
+     [Theory]
+     [InlineData("UppercaseGreeting", false, "Hello, World!")]
+-    [InlineData("UppercaseGreeting", true, "HELLO, WORLD!")]
++    [InlineData("UppercaseGreeting", true, "Unexpected greeting!")]
+     [InlineData("PersonalizedGreeting", false, "Hello, World!")]
+     [InlineData("PersonalizedGreeting", true, "Hello, Ada!")]
+     [InlineData("MultilingualGreeting", false, "Hello, World!")]
