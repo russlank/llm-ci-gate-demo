@@ -19,7 +19,7 @@ public sealed class GreetingService(IFeatureManager features, GreetingOptions op
         var name = await features.IsEnabledAsync(FeatureFlags.PersonalizedGreeting)
             ? options.Name?.Trim()
             : null;
-        var greeting = BuildGreeting(language, name);
+        var greeting = Program.BuildGreeting(language, name);
 
         if (await features.IsEnabledAsync(FeatureFlags.StyledGreeting)
             && string.Equals(options.Style?.Trim(), GreetingOptions.FormalStyle, StringComparison.OrdinalIgnoreCase))
@@ -38,19 +38,5 @@ public sealed class GreetingService(IFeatureManager features, GreetingOptions op
         }
 
         return greeting;
-    }
-
-    private static string BuildGreeting(string? language, string? name)
-    {
-        var (standard, personalized) = language switch
-        {
-            GreetingMessages.SpanishCode => (GreetingMessages.Spanish, GreetingMessages.PersonalizedSpanish),
-            GreetingMessages.SwedishCode => (GreetingMessages.Swedish, GreetingMessages.PersonalizedSwedish),
-            _ => (GreetingMessages.Default, GreetingMessages.Personalized)
-        };
-
-        return string.IsNullOrEmpty(name)
-            ? standard
-            : string.Format(CultureInfo.InvariantCulture, personalized, name);
     }
 }
