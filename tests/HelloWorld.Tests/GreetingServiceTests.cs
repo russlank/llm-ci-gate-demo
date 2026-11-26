@@ -22,20 +22,20 @@ public sealed class GreetingServiceTests
             .AddJsonFile("appsettings.json")
             .Build();
 
-        Assert.Equal("Hello, World!", await GreetAsync(configuration));
+        Assert.Equal("*** Hello, World! ***", await GreetAsync(configuration));
     }
 
     [Theory]
-    [InlineData("UppercaseGreeting", false, "Hello, World!")]
-    [InlineData("UppercaseGreeting", true, "HELLO, WORLD!")]
-    [InlineData("PersonalizedGreeting", false, "Hello, World!")]
+    [InlineData("UppercaseGreeting", false, "*** Hello, World! ***")]
+    [InlineData("UppercaseGreeting", true, "*** HELLO, WORLD! ***")]
+    [InlineData("PersonalizedGreeting", false, "*** Hello, World! ***")]
     [InlineData("PersonalizedGreeting", true, "Hello, Ada!")]
-    [InlineData("MultilingualGreeting", false, "Hello, World!")]
+    [InlineData("MultilingualGreeting", false, "*** Hello, World! ***")]
     [InlineData("MultilingualGreeting", true, "¡Hola, mundo!")]
-    [InlineData("StyledGreeting", false, "Hello, World!")]
-    [InlineData("StyledGreeting", true, "[ Hello, World! ]")]
-    [InlineData("TimestampedGreeting", false, "Hello, World!")]
-    [InlineData("TimestampedGreeting", true, "[2026-01-01T00:00:00.0000000+00:00] Hello, World!")]
+    [InlineData("StyledGreeting", false, "*** Hello, World! ***")]
+    [InlineData("StyledGreeting", true, "[ *** Hello, World! *** ]")]
+    [InlineData("TimestampedGreeting", false, "*** Hello, World! ***")]
+    [InlineData("TimestampedGreeting", true, "[2026-01-01T00:00:00.0000000+00:00] *** Hello, World! ***")]
     public async Task GreetAsync_FeatureFlag_ControlsOutput(string flag, bool enabled, string expected)
     {
         var configuration = new ConfigurationBuilder()
