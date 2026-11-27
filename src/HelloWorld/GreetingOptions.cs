@@ -17,4 +17,7 @@ public sealed class GreetingOptions
 
     /// <summary>Style name used when styled greetings are enabled.</summary>
     public string? Style { get; set; }
+
+    /// <summary>Signature appended when signed greetings are enabled.</summary>
+    public string? Signature { get; set; }
 }

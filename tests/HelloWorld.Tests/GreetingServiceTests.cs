@@ -48,13 +48,28 @@ public sealed class GreetingServiceTests
         Assert.Equal(expected, await GreetAsync(configuration));
     }
 
-    private static async Task<string> GreetAsync(IConfiguration configuration)
+    [Theory]
+    [InlineData(true, "Hello, World! — The HelloWorld team")]
+    public async Task GreetAsync_SignedFlag_ControlsOutput(bool enabled, string expected)
+    {
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["FeatureManagement:SignedGreeting"] = enabled.ToString()
+            })
+            .Build();
+        var options = new GreetingOptions { Signature = "The HelloWorld team" };
+
+        Assert.Equal(expected, await GreetAsync(configuration, options));
+    }
+
+    private static async Task<string> GreetAsync(IConfiguration configuration, GreetingOptions? options = null)
     {
         var services = new ServiceCollection();
         services.AddFeatureManagement(configuration);
         using var provider = services.BuildServiceProvider();
         var features = provider.GetRequiredService<IFeatureManager>();
-        return await new GreetingService(features, Options, new FixedTimeProvider()).GreetAsync();
+        return await new GreetingService(features, options ?? Options, new FixedTimeProvider()).GreetAsync();
     }
 
     private sealed class FixedTimeProvider : TimeProvider
