@@ -32,7 +32,7 @@ public sealed class GreetingService(IFeatureManager features, GreetingOptions op
             greeting = greeting.ToUpperInvariant();
         }
 
-        if (await features.IsEnabledAsync(FeatureFlags.TimestampedGreeting))
+        if (await features.IsEnabledAsync("TimestampedGreeting"))
         {
             greeting = string.Format(CultureInfo.InvariantCulture, GreetingMessages.Timestamped, clock.GetUtcNow(), greeting);
         }
