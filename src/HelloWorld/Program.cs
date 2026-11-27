@@ -1,3 +1,4 @@
+using System.Globalization;
 using HelloWorld;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,3 +20,21 @@ services.AddSingleton<GreetingService>();
 using var provider = services.BuildServiceProvider();
 
 Console.WriteLine(await provider.GetRequiredService<GreetingService>().GreetAsync());
+
+/// <summary>Greeting text selection kept beside the composition root.</summary>
+public partial class Program
+{
+    internal static string BuildGreeting(string? language, string? name)
+    {
+        var (standard, personalized) = language switch
+        {
+            GreetingMessages.SpanishCode => (GreetingMessages.Spanish, GreetingMessages.PersonalizedSpanish),
+            GreetingMessages.SwedishCode => (GreetingMessages.Swedish, GreetingMessages.PersonalizedSwedish),
+            _ => (GreetingMessages.Default, GreetingMessages.Personalized)
+        };
+
+        return string.IsNullOrEmpty(name)
+            ? standard
+            : string.Format(CultureInfo.InvariantCulture, personalized, name);
+    }
+}
