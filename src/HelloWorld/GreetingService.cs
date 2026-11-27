@@ -9,7 +9,7 @@ namespace HelloWorld;
 /// <param name="clock">Clock used for the optional UTC timestamp.</param>
 public sealed class GreetingService(IFeatureManager features, GreetingOptions options, TimeProvider clock)
 {
-    /// <summary>Builds the greeting, then applies style, uppercase, and timestamp in that order.</summary>
+    /// <summary>Builds the greeting, then applies style, uppercase, timestamp, and signature in that order.</summary>
     /// <returns>The complete greeting. With every flag off, it returns the default message.</returns>
     public async Task<string> GreetAsync()
     {
@@ -35,6 +35,12 @@ public sealed class GreetingService(IFeatureManager features, GreetingOptions op
         if (await features.IsEnabledAsync(FeatureFlags.TimestampedGreeting))
         {
             greeting = string.Format(CultureInfo.InvariantCulture, GreetingMessages.Timestamped, clock.GetUtcNow(), greeting);
+        }
+
+        var signature = options.Signature?.Trim();
+        if (!string.IsNullOrEmpty(signature))
+        {
+            greeting = string.Format(CultureInfo.InvariantCulture, GreetingMessages.Signed, greeting, signature);
         }
 
         return greeting;
